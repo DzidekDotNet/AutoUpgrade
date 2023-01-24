@@ -15,7 +15,8 @@ public static class HostBuilderExtensions
             var entryAssembly = Assembly.GetEntryAssembly();
             if (entryAssembly != null)
             {
-                hostBuilder.UseContentRoot(entryAssembly.Location.Replace(entryAssembly.ManifestModule.Name, string.Empty));
+                hostBuilder.UseContentRoot(entryAssembly.Location.Replace(entryAssembly.ManifestModule.Name,
+                    string.Empty));
             }
         }
 
@@ -25,11 +26,6 @@ public static class HostBuilderExtensions
                 options.ServiceName =
                     ServiceName.GetServiceName(serviceName, serviceNameSuffix);
             })
-            .ConfigureServices(services =>
-            {
-                services
-                    .AddWindowsService();
-                configureDelegate(services);
-            });
+            .ConfigureServices(configureDelegate);
     }
 }

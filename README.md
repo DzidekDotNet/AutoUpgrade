@@ -76,8 +76,10 @@ The working example is available in the GitHub repository [AutoUpgrade](https://
 For testing purposes, you need to build projects and install windows services. You can then send the new version of the service via HTTP to http://localhost:9000. You can use swagger to do this at http://localhost:9000/swagger
 
 ## Changelog
+- 1.0.1
+  - DotNet6 Fix 
 - 1.0.0
-    - First version
+  - First version
 
 ## Nuget packages
 ### Service
