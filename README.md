@@ -2,7 +2,7 @@
 # Windows service with auto upgrade feature
 
 An auto-updating Windows service with the ability to send a new compressed version on demand
-![C1 and sequence diagram](https://github.com/DzidekDotNet/AutoUpgrade.Service/blob/main/c1_sequenceDiagram.jpg?raw=true)
+![C1 and sequence diagram](https://github.com/DzidekDotNet/AutoUpgrade/blob/main/c1_sequenceDiagram.jpg?raw=true)
 
 Packages ([Dzidek.Net.AutoUpgrade.Service](https://www.nuget.org/packages/Dzidek.Net.AutoUpgrade.Service) and [Dzidek.Net.AutoUpgrade.Upgrader](https://www.nuget.org/packages/Dzidek.Net.AutoUpgrade.Upgrader)) allow us to implement a service with an automatic update on demand if part of our application is installed outside our servers where we do not have administrator rights or even log in
 

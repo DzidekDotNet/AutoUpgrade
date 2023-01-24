@@ -31,5 +31,7 @@
     <ItemGroup>
       <ProjectReference Include="..\Dzidek.Net.AutoUpgrade.Common\Dzidek.Net.AutoUpgrade.Common.csproj" />
     </ItemGroup>
-
+    <ItemGroup>
+        <None Include="..\README.md" Pack="true" PackagePath="\" />
+    </ItemGroup>
 </Project>
