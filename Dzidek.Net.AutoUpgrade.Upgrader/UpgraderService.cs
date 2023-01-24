@@ -1,7 +1,9 @@
-﻿using System.ServiceProcess;
+﻿using System.IO.Compression;
+using System.ServiceProcess;
 using Dzidek.Net.AutoUpgrade.Common;
 using Dzidek.Net.AutoUpgrade.Upgrader.FileSystemWatchers;
 using Microsoft.Extensions.Hosting;
+using Microsoft.Extensions.Logging;
 
 namespace Dzidek.Net.AutoUpgrade.Upgrader;
 
@@ -9,11 +11,13 @@ public sealed class UpgraderService : IHostedService
 {
     private readonly IFileWatcher _fileWatcher;
     private readonly AutoUpgradeUpgraderConfiguration _configuration;
+    private readonly ILogger<UpgraderService> _logger;
 
-    public UpgraderService(IFileWatcher fileWatcher, AutoUpgradeUpgraderConfiguration configuration)
+    public UpgraderService(IFileWatcher fileWatcher, AutoUpgradeUpgraderConfiguration configuration, ILogger<UpgraderService> logger)
     {
         _fileWatcher = fileWatcher;
         _configuration = configuration;
+        _logger = logger;
     }
 
     public Task StartAsync(CancellationToken cancellationToken)
@@ -36,6 +40,11 @@ public sealed class UpgraderService : IHostedService
 
     private void Upgrade(string newVersionPath, string binPath)
     {
+        if (!Directory.Exists(newVersionPath))
+        {
+            Directory.CreateDirectory(newVersionPath);
+        }
+
         Repeat(StopAction);
 
         UnzipAndCopyFiles(newVersionPath, binPath);
@@ -45,7 +54,7 @@ public sealed class UpgraderService : IHostedService
 
     private string GetServiceName()
     {
-        return ServiceName.GetServiceName(_configuration.ServiceName,_configuration.ServiceNameSuffix);
+        return ServiceName.GetServiceName(_configuration.ServiceName, _configuration.ServiceNameSuffix);
     }
 
     private void StopAction(TimeSpan wait)
@@ -90,12 +99,24 @@ public sealed class UpgraderService : IHostedService
     {
         string[] files = Directory.GetFiles(sourcePath);
 
-        foreach (string s in files)
+        foreach (string file in files)
         {
-            string fileName = Path.GetFileName(s);
-            string destFile = Path.Combine(destPath, fileName);
-            File.Copy(s, destFile, true);
-            File.Delete(s);
+            _logger.LogDebug("Starting unzipping '{0}'", file);
+            string fileName = Path.GetFileName(file);
+            string zipPath = Path.Combine(sourcePath, fileName);
+            using (ZipArchive archive = ZipFile.OpenRead(zipPath))
+            {
+                foreach (ZipArchiveEntry entry in archive.Entries)
+                {
+                    string destinationPath = Path.GetFullPath(Path.Combine(destPath, entry.FullName));
+                    
+                    if (destinationPath.StartsWith(destPath, StringComparison.Ordinal))
+                        entry.ExtractToFile(destinationPath, true);
+                }
+            }
+            
+            File.Delete(file);
+            _logger.LogInformation("The new version has been copied '{0}'", file);
         }
     }
 }
