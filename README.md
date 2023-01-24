@@ -32,13 +32,36 @@ app.MapGet("/",
 app.MapPost("/", (IFormFile file, IAutoUpgradeService autoUpgradeService) => autoUpgradeService.Upgrade(file));
 ```
 #### Configuration
-- Service name - service name - should be the same in "Service" and "Updater", both add suffixes to distinguish the two services
-- New Version Directory Name - name of the directory where new versions will be saved. This directory will be watched by the Upgrader. This directory will be placed in the service directory
+- ServiceName - service name - should be the same in "Service" and "Updater", both add suffixes to distinguish the two services
+- NewVersionDirectoryName - name of the directory where new versions will be saved. This directory will be watched by the Upgrader. This directory will be placed in the service directory
   - Default value: NewVersion
 - ServiceNameSuffix - service suffix name
   - Default value: Service
   - Example: In the example above, the service name will be "AutoUpgrade.Service"
 ### Upgrader
+In appSettings.json:
+```json
+{
+  "AutoUpgrade": {
+    "ServiceName": "AutoUpgrade",
+    "ServicePath": "[The required path to the directory where the exe file is located]"
+  }
+}
+```
+In program.cs:
+```csharp
+builder.Host
+    .UseAutoUpgradeUpgrader(builder.Configuration.GetSection("AutoUpgrade").Get<AutoUpgradeUpgraderConfiguration>()!);
+```
+#### Configuration
+- ServiceName - service name - should be the same in "Service" and "Updater", both add suffixes to distinguish the two services
+- ServicePath - the required path to the directory where the exe file is located
+- ServiceNameSuffix - service suffix name
+  - Default value: Service
+  - Example: In the example above, the service name will be "AutoUpgrade.Service"
+- UpgraderNameSuffix - upgrader suffix name
+  - Default value: Upgrader
+  - Example: In the example above, the service name will be "AutoUpgrade.Upgrader"
 
 ### Create service in windows
 You should call with admin rights. You should first create Service because Upgrader automatically starts Service 
@@ -47,6 +70,11 @@ sc.exe create "AutoUpgrade.Service" binpath="[PATH]\AutoUpgrade.Service.exe" sta
 sc.exe create "AutoUpgrade.Upgrader" binpath="[PATH]\AutoUpgrade.Upgrader.exe" start=delayed-auto
 ```
 
+### Working example
+The working example is available in the GitHub repository [AutoUpgrade](https://github.com/DzidekDotNet/AutoUpgrade).
+
+For testing purposes, you need to build projects and install windows services. You can then send the new version of the service via HTTP to http://localhost:9000. You can use swagger to do this at http://localhost:9000/swagger
+
 ## Changelog
 - 7.0.0 and 6.0.0
     - First version
@@ -54,7 +82,7 @@ sc.exe create "AutoUpgrade.Upgrader" binpath="[PATH]\AutoUpgrade.Upgrader.exe" s
 ## Versioning policy
 The project major version will be the same as the DotNetCore version
 
-## Nuget
+## Nuget packages
 ### Service
 [Dzidek.Net.AutoUpgrade.Service](https://www.nuget.org/packages/Dzidek.Net.AutoUpgrade.Service)
 ### Upgrader
@@ -68,4 +96,4 @@ The project major version will be the same as the DotNetCore version
 
 ## License
 
-[MIT](https://github.com/DzidekDotNet/AutoUpgrade.Service/blob/main/LICENSE)
+[MIT](https://github.com/DzidekDotNet/AutoUpgrade/blob/main/LICENSE)
