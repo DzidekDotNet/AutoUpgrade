@@ -84,6 +84,8 @@ For testing purposes, you need to build projects and install windows services. Y
 [Dzidek.Net.AutoUpgrade.Service](https://www.nuget.org/packages/Dzidek.Net.AutoUpgrade.Service)
 ### Upgrader
 [Dzidek.Net.AutoUpgrade.Upgrader](https://www.nuget.org/packages/Dzidek.Net.AutoUpgrade.Upgrader)
+### Common
+[Dzidek.Net.AutoUpgrade.Common](https://www.nuget.org/packages/Dzidek.Net.AutoUpgrade.Common)
 
 
 ## Authors
