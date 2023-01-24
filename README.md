@@ -29,7 +29,12 @@ Below is an example of how to use it through the API over HTTP/HTTPS. You can us
 ```csharp
 app.MapGet("/",
     (IAutoUpgradeService autoUpgradeService) => $"Hello World from service '{autoUpgradeService.GetVersion()}'!");
-app.MapPost("/", (IFormFile file, IAutoUpgradeService autoUpgradeService) => autoUpgradeService.Upgrade(file));
+app.MapPost("/", (IFormFile file, IAutoUpgradeService autoUpgradeService) =>
+{
+    using var fileStream = new MemoryStream();
+    file.CopyTo(fileStream);
+    return autoUpgradeService.Upgrade(fileStream.ToArray(), file.FileName);
+});
 ```
 #### Configuration
 - ServiceName - service name - should be the same in "Service" and "Updater", both add suffixes to distinguish the two services
@@ -76,6 +81,8 @@ The working example is available in the GitHub repository [AutoUpgrade](https://
 For testing purposes, you need to build projects and install windows services. You can then send the new version of the service via HTTP to http://localhost:9000. You can use swagger to do this at http://localhost:9000/swagger
 
 ## Changelog
+- 1.0.2
+  - Removed unnecessary dependencies
 - 1.0.1
   - DotNet6 Fix 
 - 1.0.0

@@ -1,7 +1,6 @@
 <Project Sdk="Microsoft.NET.Sdk">
 
     <PropertyGroup>
-        <TargetFrameworks>net6.0;net7.0</TargetFrameworks>
         <ImplicitUsings>enable</ImplicitUsings>
         <Nullable>enable</Nullable>
         <Title>Dzidek.Net.AutoUpgrade</Title>
@@ -14,6 +13,7 @@
         <PackageTags>DotNetCore, Auto Upgrade, Windows Services</PackageTags>
         <Description>An auto-updating Windows service with the ability to send a new compressed version on demand</Description>
         <PackageReadmeFile>README.md</PackageReadmeFile>
+        <TargetFrameworks>net6.0;net7.0</TargetFrameworks>
     </PropertyGroup>
     
     <ItemGroup>

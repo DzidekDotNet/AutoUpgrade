@@ -1,9 +1,7 @@
-﻿using Microsoft.AspNetCore.Http;
-
-namespace Dzidek.Net.AutoUpgrade.Service;
+﻿namespace Dzidek.Net.AutoUpgrade.Service;
 
 public interface IAutoUpgradeService
 {
     string GetVersion();
-    Task Upgrade(IFormFile newLibraryVersion);
+    Task Upgrade(byte[] newLibraryVersion, string fileName);
 }

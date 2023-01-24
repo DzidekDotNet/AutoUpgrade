@@ -1,7 +1,6 @@
 <Project Sdk="Microsoft.NET.Sdk">
 
     <PropertyGroup>
-        <TargetFrameworks>net6.0;net7.0</TargetFrameworks>
         <ImplicitUsings>enable</ImplicitUsings>
         <Nullable>enable</Nullable>
         <Title>Dzidek.Net.AutoUpgrade</Title>
@@ -14,24 +13,13 @@
         <PackageTags>DotNetCore, Auto Upgrade, Windows Services</PackageTags>
         <Description>An auto-updating Windows service with the ability to send a new compressed version on demand</Description>
         <PackageReadmeFile>README.md</PackageReadmeFile>
+        <TargetFrameworks>net6.0;net7.0</TargetFrameworks>
     </PropertyGroup>
-
-    <ItemGroup>
-        <Reference Include="Microsoft.AspNetCore.Hosting.Abstractions">
-          <HintPath>C:\Program Files\dotnet\shared\Microsoft.AspNetCore.App\7.0.0\Microsoft.AspNetCore.Hosting.Abstractions.dll</HintPath>
-        </Reference>
-        <Reference Include="Microsoft.Extensions.DependencyInjection.Abstractions">
-            <HintPath>C:\Program Files\dotnet\shared\Microsoft.AspNetCore.App\7.0.0\Microsoft.Extensions.DependencyInjection.Abstractions.dll</HintPath>
-        </Reference>
-    </ItemGroup>
 
     <ItemGroup>
         <ProjectReference Include="..\Dzidek.Net.AutoUpgrade.Common\Dzidek.Net.AutoUpgrade.Common.csproj" />
     </ItemGroup>
     <ItemGroup>
         <None Include="..\README.md" Pack="true" PackagePath="\" />
-    </ItemGroup>
-    <ItemGroup>
-      <PackageReference Include="Microsoft.AspNetCore.Http.Features" Version="5.0.17" />
     </ItemGroup>
 </Project>

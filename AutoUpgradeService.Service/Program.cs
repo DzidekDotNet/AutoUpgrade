@@ -20,6 +20,11 @@ app.UseSwaggerUI(c => c.SwaggerEndpoint("/swagger/v1/swagger.json", "Service v1"
 
 app.MapGet("/",
     (IAutoUpgradeService autoUpgradeService) => $"Hello World from service '{autoUpgradeService.GetVersion()}'!");
-app.MapPost("/", (IFormFile file, IAutoUpgradeService autoUpgradeService) => autoUpgradeService.Upgrade(file));
+app.MapPost("/", (IFormFile file, IAutoUpgradeService autoUpgradeService) =>
+{
+    using var fileStream = new MemoryStream();
+    file.CopyTo(fileStream);
+    return autoUpgradeService.Upgrade(fileStream.ToArray(), file.FileName);
+});
 
 app.Run();
