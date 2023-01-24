@@ -1,8 +1,13 @@
 using AutoUpgradeService.Service;
 using Dzidek.Net.AutoUpgrade.Service;
+using Microsoft.Extensions.Hosting.WindowsServices;
 using Microsoft.OpenApi.Models;
 
-var builder = WebApplication.CreateBuilder(args);
+var builder = WebApplication.CreateBuilder(new WebApplicationOptions
+{
+    Args = args,
+    ContentRootPath = WindowsServiceHelpers.IsWindowsService() ? AppContext.BaseDirectory : default
+});
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen(options =>
 {

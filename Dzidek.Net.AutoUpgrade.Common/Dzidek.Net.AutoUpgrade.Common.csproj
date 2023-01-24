@@ -5,7 +5,7 @@
         <Nullable>enable</Nullable>
         <Title>Dzidek.Net.AutoUpgrade</Title>
         <Copyright>@Dzidek.Net</Copyright>
-        <Version>1.0.1</Version>
+        <Version>1.0.2</Version>
         <PackageProjectUrl>https://github.com/DzidekDotNet/AutoUpgrade</PackageProjectUrl>
         <RepositoryUrl>https://github.com/DzidekDotNet/AutoUpgrade</RepositoryUrl>
         <PackageLicenseUrl>https://github.com/DzidekDotNet/AutoUpgrade/blob/main/LICENSE</PackageLicenseUrl>
