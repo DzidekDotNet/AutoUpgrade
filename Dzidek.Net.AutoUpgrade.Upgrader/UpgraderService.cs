@@ -104,17 +104,7 @@ public sealed class UpgraderService : IHostedService
             _logger.LogDebug("Starting unzipping '{0}'", file);
             string fileName = Path.GetFileName(file);
             string zipPath = Path.Combine(sourcePath, fileName);
-            using (ZipArchive archive = ZipFile.OpenRead(zipPath))
-            {
-                foreach (ZipArchiveEntry entry in archive.Entries)
-                {
-                    string destinationPath = Path.GetFullPath(Path.Combine(destPath, entry.FullName));
-                    
-                    if (destinationPath.StartsWith(destPath, StringComparison.Ordinal))
-                        entry.ExtractToFile(destinationPath, true);
-                }
-            }
-            
+            ZipFile.ExtractToDirectory(zipPath, destPath);
             File.Delete(file);
             _logger.LogInformation("The new version has been copied '{0}'", file);
         }

@@ -25,6 +25,14 @@ In program.cs:
 builder.Host
     .UseAutoUpgradeService(builder.Configuration.GetSection("AutoUpgrade").Get<AutoUpgradeServiceConfiguration>()!);
 ```
+Remember to set content root path for your windows service
+```csharp
+var builder = WebApplication.CreateBuilder(new WebApplicationOptions
+{
+    Args = args,
+    ContentRootPath = WindowsServiceHelpers.IsWindowsService() ? AppContext.BaseDirectory : default
+});
+```
 Below is an example of how to use it through the API over HTTP/HTTPS. You can use it as you want
 ```csharp
 app.MapGet("/",
@@ -58,6 +66,14 @@ In program.cs:
 builder.Host
     .UseAutoUpgradeUpgrader(builder.Configuration.GetSection("AutoUpgrade").Get<AutoUpgradeUpgraderConfiguration>()!);
 ```
+Remember to set content root path for your windows service
+```csharp
+var builder = WebApplication.CreateBuilder(new WebApplicationOptions
+{
+    Args = args,
+    ContentRootPath = WindowsServiceHelpers.IsWindowsService() ? AppContext.BaseDirectory : default
+});
+```
 #### Configuration
 - ServiceName - service name - should be the same in "Service" and "Updater", both add suffixes to distinguish the two services
 - ServicePath - the required path to the directory where the exe file is located
@@ -81,6 +97,8 @@ The working example is available in the GitHub repository [AutoUpgrade](https://
 For testing purposes, you need to build projects and install windows services. You can then send the new version of the service via HTTP to http://localhost:9000. You can use swagger to do this at http://localhost:9000/swagger
 
 ## Changelog
+- 1.0.3
+  - Unzipping files with subdirectories
 - 1.0.2
   - Removed unnecessary dependencies
 - 1.0.1
