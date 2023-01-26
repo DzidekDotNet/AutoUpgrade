@@ -5,6 +5,8 @@ public sealed class AutoUpgradeUpgraderConfiguration
 {
     public string ServiceName { get; init; }
     public string ServicePath { get; init; }
+    // ReSharper disable once UnusedAutoPropertyAccessor.Global
+    public string? ServiceOldVersionsPath { get; init; }
     public string UpgraderNameSuffix { get; init; } = "Upgrader";
     public string ServiceNameSuffix { get; init; } = "Service";
 

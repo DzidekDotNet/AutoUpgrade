@@ -6,7 +6,7 @@
         <Title>Dzidek.Net.AutoUpgrade</Title>
         <Copyright>@Dzidek.Net</Copyright>
         <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
-        <Version>1.0.3</Version>
+        <Version>1.0.4</Version>
         <PackageProjectUrl>https://github.com/DzidekDotNet/AutoUpgrade</PackageProjectUrl>
         <RepositoryUrl>https://github.com/DzidekDotNet/AutoUpgrade</RepositoryUrl>
         <PackageLicenseUrl>https://github.com/DzidekDotNet/AutoUpgrade/blob/main/LICENSE</PackageLicenseUrl>

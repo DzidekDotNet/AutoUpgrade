@@ -24,7 +24,7 @@ public sealed class UpgraderService : IHostedService
     {
         string binPath = _configuration.ServicePath;
         string newVersionPath = Path.Combine(binPath, "NewVersion");
-        Upgrade(newVersionPath, binPath);
+        Upgrade(newVersionPath, binPath, _configuration.ServiceOldVersionsPath);
         _fileWatcher.OnStart(
             new FileSystemWatcherConfiguration()
             {
@@ -33,12 +33,12 @@ public sealed class UpgraderService : IHostedService
             },
             new FileSystemWatcherActions()
             {
-                Created = (sender, args) => { Upgrade(newVersionPath, binPath); }
+                Created = (sender, args) => { Upgrade(newVersionPath, binPath, _configuration.ServiceOldVersionsPath); }
             });
         return Task.CompletedTask;
     }
 
-    private void Upgrade(string newVersionPath, string binPath)
+    private void Upgrade(string newVersionPath, string binPath, string? serviceOldVersionsPath)
     {
         if (!Directory.Exists(newVersionPath))
         {
@@ -46,8 +46,8 @@ public sealed class UpgraderService : IHostedService
         }
 
         Repeat(StopAction);
-
-        UnzipAndCopyFiles(newVersionPath, binPath);
+        
+        UnzipAndCopyFiles(newVersionPath, binPath, serviceOldVersionsPath);
 
         Repeat(StartAction);
     }
@@ -95,18 +95,38 @@ public sealed class UpgraderService : IHostedService
         return Task.CompletedTask;
     }
 
-    private void UnzipAndCopyFiles(string sourcePath, string destPath)
+    private void UnzipAndCopyFiles(string sourcePath, string servicePath, string? serviceOldVersionsPath)
     {
         string[] files = Directory.GetFiles(sourcePath);
+
+        if (files.Length > 0)
+        {
+            ZipOldVersion(servicePath, serviceOldVersionsPath);
+        }
 
         foreach (string file in files)
         {
             _logger.LogDebug("Starting unzipping '{0}'", file);
             string fileName = Path.GetFileName(file);
             string zipPath = Path.Combine(sourcePath, fileName);
-            ZipFile.ExtractToDirectory(zipPath, destPath, true);
+            ZipFile.ExtractToDirectory(zipPath, servicePath, true);
             File.Delete(file);
             _logger.LogInformation("The new version has been copied '{0}'", file);
+        }
+    }
+    
+    private void ZipOldVersion(string sourcePath, string? destPath)
+    {
+        if (destPath != null)
+        {
+            if (!Directory.Exists(destPath))
+            {
+                Directory.CreateDirectory(destPath);
+            }
+            string destFile = Path.Combine(destPath, $"{DateTime.UtcNow.ToString("o").Replace(":","_").Replace(".","_")}.zip");
+            _logger.LogDebug("Starting zipping '{0}'", sourcePath);
+            ZipFile.CreateFromDirectory(sourcePath, destFile);
+            _logger.LogInformation("The old version has been copied '{0}'", destFile);
         }
     }
 }

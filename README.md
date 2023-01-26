@@ -83,6 +83,7 @@ var builder = WebApplication.CreateBuilder(new WebApplicationOptions
 - UpgraderNameSuffix - upgrader suffix name
   - Default value: Upgrader
   - Example: In the example above, the service name will be "AutoUpgrade.Upgrader"
+- ServiceOldVersionsPath - if set, before upgrade current version will be zipped and copied to the directory
 
 ### Create service in windows
 You should call with admin rights. You should first create Service because Upgrader automatically starts Service 
@@ -97,6 +98,8 @@ The working example is available in the GitHub repository [AutoUpgrade](https://
 For testing purposes, you need to build projects and install windows services. You can then send the new version of the service via HTTP to http://localhost:9000. You can use swagger to do this at http://localhost:9000/swagger
 
 ## Changelog
+- 1.0.4
+  - Possibility to zip and keep old versions by setting ServiceOldVersionsPath props in upgrader
 - 1.0.3
   - Unzipping files with subdirectories
 - 1.0.2
