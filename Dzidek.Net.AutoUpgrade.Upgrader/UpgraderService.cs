@@ -1,4 +1,5 @@
 ﻿using System.IO.Compression;
+using System.Management;
 using System.ServiceProcess;
 using Dzidek.Net.AutoUpgrade.Common;
 using Dzidek.Net.AutoUpgrade.Upgrader.FileSystemWatchers;
@@ -24,6 +25,10 @@ public sealed class UpgraderService : IHostedService
     {
         string binPath = _configuration.ServicePath;
         string newVersionPath = Path.Combine(binPath, "NewVersion");
+        if (!IsProperConfiguration(binPath))
+        {
+            throw new ArgumentException("Invalid service path");
+        }
         Upgrade(newVersionPath, binPath, _configuration.ServiceOldVersionsPath);
         _fileWatcher.OnStart(
             new FileSystemWatcherConfiguration()
@@ -36,6 +41,29 @@ public sealed class UpgraderService : IHostedService
                 Created = (sender, args) => { Upgrade(newVersionPath, binPath, _configuration.ServiceOldVersionsPath); }
             });
         return Task.CompletedTask;
+    }
+
+    private bool IsProperConfiguration(string binPath)
+    {
+        return Directory.GetFiles(binPath).Any() && Directory.GetFiles(GetServicePath()).Any();
+    }
+
+    private string GetServicePath()
+    {
+        ManagementObjectSearcher searcher = new ManagementObjectSearcher("SELECT * FROM Win32_Service");
+        ManagementObjectCollection collection = searcher.Get();
+
+        foreach (ManagementObject obj in collection)
+        {    
+            string name = obj["Name"] as string;
+            string pathName = obj["PathName"] as string;
+            if (name == GetServiceName() && !string.IsNullOrEmpty(pathName))
+            {
+                return Path.GetDirectoryName(pathName);
+            }
+        }
+
+        throw new ArgumentException("Invalid service name");
     }
 
     private void Upgrade(string newVersionPath, string binPath, string? serviceOldVersionsPath)

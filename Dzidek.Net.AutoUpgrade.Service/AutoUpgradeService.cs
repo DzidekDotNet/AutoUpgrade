@@ -23,6 +23,10 @@ internal sealed class AutoUpgradeService : IAutoUpgradeService
         {
             Directory.CreateDirectory(dirPath);
         }
+        if (Directory.GetFiles(dirPath).Any())
+        {
+            throw new UpgradePackageNotInstalledException(dirPath);
+        }
 
         await File.WriteAllBytesAsync(Path.Combine(dirPath, fileName), newLibraryVersion);
     }

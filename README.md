@@ -98,6 +98,8 @@ The working example is available in the GitHub repository [AutoUpgrade](https://
 For testing purposes, you need to build projects and install windows services. You can then send the new version of the service via HTTP to http://localhost:9000. You can use swagger to do this at http://localhost:9000/swagger
 
 ## Changelog
+- 1.0.5
+  - Prevent start service when package exists to upgrade
 - 1.0.4
   - Possibility to zip and keep old versions by setting ServiceOldVersionsPath props in upgrader
 - 1.0.3
